@@ -21,31 +21,10 @@ jobs:
         run: npm install
       - name: Docker Login
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Docker Scout Scan
-        run: |
-          docker-scout quickview fs://.
-          docker-scout cves fs://.
-      - name: Docker build and push
-        run: |
-          # Run commands to build and push Docker images
-          docker build -t myntra .
-          docker tag myntra charudpss/myntra:latest
-          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-          docker push charudpss/myntra:latest
-        env:
-          DOCKER_CLI_ACI: 1
-      - name: Docker Scout Image Scan
-        run: |
-          docker-scout quickview charudpss/myntra:latest
-          docker-scout cves charudpss/myntra:latest
   deploy:
    needs: build-analyze-scan
    runs-on: [self-hosted]
    steps:
-      - name: docker pull image
-        run: docker pull charudpss/myntra:latest
-      - name: Deploy to container
-        run: docker run -d --name game -p 3000:3000 charudpss/myntra:latest
       - name: Update kubeconfig
         run: aws eks --region us-east-1 update-kubeconfig --name demo
       - name: Deploy to kubernetes
