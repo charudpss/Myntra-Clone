@@ -15,9 +15,9 @@ spec:
     spec:
       containers:
       - name: myntra
-        image: sevenajay/myntra:latest
+        image: charudpss/myntra:latest
         ports:
-        - containerPort: 3000   # Use port 3000
+        - containerPort: 3000
 
 ---
 apiVersion: v1
